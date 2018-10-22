@@ -22,14 +22,12 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 /**
  * 
- * @author vk427 
+ * @author viktorRot
  * Convert a given excel to csv
  *
  */
 
 public class XlsToCsv {
-
-	//static String[] DATE_PATTERN = { "DD.MM.YYYY", "dd" + '\\' + ".mm" + '\\' + ".yyyy" };
 
 	@SuppressWarnings("deprecation")
 	static void convertXls(File inputFile, File outputFile, int skipRows, String seperator, int sheetPos) {
@@ -161,8 +159,6 @@ public class XlsToCsv {
 		String sheetPos = "0";
 		String sourcePath = "";
 		String archivePath = "";
-		sourcePath = "";
-		archivePath = "";
 
 		for (int i = 0; i < args.length; i++) {
 			String[] pName = args[i].split("=");
