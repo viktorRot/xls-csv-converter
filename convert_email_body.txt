@@ -1,0 +1,46 @@
+Public WithEvents myInboxItems As Outlook.Items
+
+Private Sub Application_Startup()
+    Set myInboxItems = Outlook.Session.GetDefaultFolder(olFolderInbox).Items
+End Sub
+
+Private Sub myInboxItems_ItemAdd(ByVal Item As Object)
+    On Error GoTo ErrorHandler
+    Dim mailItem As Outlook.MailItem
+    If TypeOf Item Is Outlook.MailItem Then
+        Set mailItem = Item
+
+        ' Check for specific header
+        If mailItem.Subject Like "*Specific Header*" Then
+            ConvertHtmlToRtfAndForward mailItem
+        End If
+    End If
+ProgramExit:
+    Exit Sub
+ErrorHandler:
+    MsgBox Err.Number & " - " & Err.Description
+    Resume ProgramExit
+End Sub
+
+Sub ConvertHtmlToRtfAndForward(Item As Outlook.MailItem)
+    Dim ForwardedMail As Outlook.MailItem
+    Dim Inspector As Outlook.Inspector
+    Dim WordEditor As Object
+
+    ' Check if the email is in HTML format
+    If Item.BodyFormat = olFormatHTML Then
+        ' Create a forward of the email
+        Set ForwardedMail = Item.Forward
+
+        ' Get the WordEditor for the forward email
+        Set Inspector = ForwardedMail.GetInspector
+        Set WordEditor = Inspector.WordEditor
+
+        ' Change the body format to RTF
+        ForwardedMail.BodyFormat = olFormatRichText
+
+        ' Forward to the specified email address
+        ForwardedMail.To = "recipient@example.com" ' Replace with the actual email address
+        ForwardedMail.Send
+    End If
+End Sub
